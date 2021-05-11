@@ -1,22 +1,28 @@
 <template>
-  <div class="user">
-    <div class="wrapper" v-if="isFemale">
-      <h1>{{ firstName }} {{ lastName }}</h1>
-      <img :src="picture" />
+  <section>
+    <h1 class="distance" v-if="isFemale">
+      Горячие милфы радом с тобой
+      <span> {{ distance }} км </span>
+    </h1>
+    <div class="user">
+      <div class="wrapper" v-if="isFemale">
+        <h1>{{ firstName }} {{ lastName }}</h1>
+        <img :src="picture" />
+      </div>
+      <div v-else class="spinner">
+        <a-spin>
+          <a-icon
+            style="position: relative; left: -40px; font-size: 100px"
+            size="large"
+            slot="indicator"
+            type="loading"
+            spin
+          />
+        </a-spin>
+      </div>
+      <button @click="update">update</button>
     </div>
-    <div v-else class="spinner">
-      <a-spin>
-        <a-icon
-          style="position: relative; left: -40px; font-size: 100px"
-          size="large"
-          slot="indicator"
-          type="loading"
-          spin
-        />
-      </a-spin>
-    </div>
-    <button @click="update">update</button>
-  </div>
+  </section>
 </template>
 
 <script>
@@ -29,6 +35,7 @@ export default {
       picture: "",
       phone: "",
       isFemale: false,
+      distance: 0,
     };
   },
   methods: {
@@ -40,6 +47,7 @@ export default {
         .then((res) => res.json())
         .then((data) => {
           if (data.results[0].gender === "female") {
+            this.distance = Math.ceil(Math.random() * 9);
             this.isFemale = true;
             this.firstName = data.results[0].name.first;
             this.lastName = data.results[0].name.last;
@@ -61,6 +69,11 @@ export default {
 </script>
 
 <style>
+.distance {
+  text-align: center;
+  color: #fe4a49;
+}
+
 .spinner {
   display: grid;
   place-content: center;
@@ -68,6 +81,7 @@ export default {
 }
 
 .user {
+  position: relative;
   display: flex;
   flex-direction: column;
   width: 350px;
@@ -76,10 +90,13 @@ export default {
   border-radius: 20px;
   padding-top: 15px;
   margin: 20px auto;
+  z-index: 9999;
 }
 
 .user h1 {
   text-align: center;
+  font-size: 30px;
+  font-weight: bold;
   width: 350px;
 }
 
@@ -118,5 +135,6 @@ export default {
 .user button:hover {
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   background: #fe4a49;
+  animation-name: name;
 }
 </style>
